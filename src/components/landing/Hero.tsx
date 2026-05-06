@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { LoginDialog } from "@/components/LoginDialog";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Hero() {
-  const [open, setOpen] = useState(false);
+  const nav = useNavigate();
+  const { user } = useAuth();
   return (
     <section className="relative overflow-hidden bg-gradient-hero">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
@@ -22,7 +22,7 @@ export function Hero() {
               India's largest BTC & ETH options paper-trading platform. Live option chains, strategy builder with Greeks, OI analytics — all in one place. Practice risk-free.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow h-12 px-6" onClick={() => setOpen(true)}>
+              <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow h-12 px-6" onClick={() => nav(user ? '/paper-trading' : '/auth')}>
                 Start Paper Trading <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Link to="/option-chain">
@@ -61,7 +61,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-      <LoginDialog open={open} onOpenChange={setOpen} />
     </section>
   );
 }
