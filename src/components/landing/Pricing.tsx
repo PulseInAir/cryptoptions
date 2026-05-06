@@ -22,7 +22,7 @@ export function Pricing() {
       </div>
       <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         <Plan name="Free" price="₹0" period="forever" features={free} cta="Get Started" onClick={() => !user && setOpen(true)} />
-        <Plan name="Pro" price="₹1,300" period="/month" features={pro} cta={user?.plan === 'pro' ? 'You're on Pro' : 'Upgrade to Pro'} highlight onClick={handleUpgrade} disabled={user?.plan === 'pro'} />
+        <Plan name="Pro" price="₹1,300" period="/month" features={pro} cta={user?.plan === 'pro' ? "You're on Pro" : 'Upgrade to Pro'} highlight onClick={handleUpgrade} disabled={user?.plan === 'pro'} />
       </div>
       <LoginDialog open={open} onOpenChange={setOpen} />
     </section>
