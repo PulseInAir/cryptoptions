@@ -22,7 +22,31 @@ Deno.serve(async (req) => {
       // contract_types: call_options,put_options ; underlying_asset_symbols: BTC,ETH
       const contractTypes = url.searchParams.get('contract_types') ?? 'call_options,put_options';
       const underlying = url.searchParams.get('underlying_asset_symbols') ?? 'BTC';
-      upstream = `${BASE}/tickers?contract_types=${encodeURIComponent(contractTypes)}&underlying_asset_symbols=${encodeURIComponent(underlying)}`;
+      upstream = `${BASE}/tickers?contract_types=${encodeURIComponent(contractTypes)}&underlying_asset_symbols=${encodeURIComponent(underlying)}&page_size=1000`;
+      // Paginate through all results
+      const all: any[] = [];
+      let next: string | null = upstream;
+      let lastMeta: any = null;
+      while (next) {
+        const rr = await fetch(next, { headers: { 'Accept': 'application/json' } });
+        if (!rr.ok) {
+          const txt = await rr.text();
+          return new Response(txt, { status: rr.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+        const j = await rr.json();
+        if (Array.isArray(j.result)) all.push(...j.result);
+        lastMeta = j.meta ?? null;
+        const after = j?.meta?.after;
+        if (after) {
+          const u2 = new URL(upstream);
+          u2.searchParams.set('after', after);
+          next = u2.toString();
+        } else { next = null; }
+      }
+      return new Response(JSON.stringify({ success: true, result: all, meta: lastMeta }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3' },
+      });
     } else if (action === 'spot') {
       const symbols = url.searchParams.get('symbols') ?? 'BTCUSD,ETHUSD';
       upstream = `${BASE}/tickers?contract_types=spot&symbols=${encodeURIComponent(symbols)}`;
