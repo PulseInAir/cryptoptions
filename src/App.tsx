@@ -13,6 +13,9 @@ import PaperTrading from "./pages/PaperTrading";
 import OIAnalysis from "./pages/OIAnalysis";
 import Positions from "./pages/Positions";
 import PricingPage from "./pages/PricingPage";
+import Auth from "./pages/Auth";
+import Admin from "./pages/Admin";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,12 +31,14 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
                 <Route path="/option-chain" element={<OptionChain />} />
                 <Route path="/strategy-builder" element={<StrategyBuilder />} />
-                <Route path="/paper-trading" element={<PaperTrading />} />
+                <Route path="/paper-trading" element={<ProtectedRoute><PaperTrading /></ProtectedRoute>} />
                 <Route path="/oi-analysis" element={<OIAnalysis />} />
-                <Route path="/positions" element={<Positions />} />
+                <Route path="/positions" element={<ProtectedRoute><Positions /></ProtectedRoute>} />
                 <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/admin" element={<ProtectedRoute require="admin"><Admin /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
