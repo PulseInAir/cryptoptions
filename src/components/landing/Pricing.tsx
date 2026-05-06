@@ -10,7 +10,7 @@ export function Pricing() {
   const [open, setOpen] = useState(false);
   const handleUpgrade = () => {
     if (!user) { setOpen(true); return; }
-    upgrade(); toast.success("Welcome to CryptoBull Pro! (mock upgrade)");
+    upgrade(); toast.success("Welcome to CryptOption Pro! (mock upgrade)");
   };
   const free = ["Basic BTC/ETH option chains", "Live spot prices", "5 paper trades / day", "Basic OI charts", "Community support"];
   const pro = ["Everything in Free", "Unlimited paper trades", "Full strategy builder + Greeks", "OI heatmaps & max-pain", "Whale flow sentiment", "Multi-expiry analytics", "Priority support"];

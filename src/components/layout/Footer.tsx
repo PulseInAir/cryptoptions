@@ -32,11 +32,11 @@ export function Footer() {
         </div>
         <div>
           <h4 className="font-semibold mb-3">Disclaimer</h4>
-          <p className="text-xs text-muted-foreground">CryptoBull is an educational paper-trading platform. Market data via Delta Exchange India public APIs. No real orders are placed.</p>
+          <p className="text-xs text-muted-foreground">CryptOption is an educational paper-trading platform. Market data via Delta Exchange India public APIs. No real orders are placed.</p>
         </div>
       </div>
       <div className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} CryptoBull. Built for traders who think in payoffs.
+        © {new Date().getFullYear()} CryptOption. Built for traders who think in payoffs.
       </div>
     </footer>
   );

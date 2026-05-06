@@ -10,7 +10,7 @@ export function LoginDialog({ open, onOpenChange }: { open: boolean; onOpenChang
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Welcome to CryptoBull</DialogTitle>
+          <DialogTitle className="text-2xl">Welcome to CryptOption</DialogTitle>
           <DialogDescription>
             Mock login — no real broker connection. You'll get ₹10,00,000 virtual capital for paper trading.
           </DialogDescription>
