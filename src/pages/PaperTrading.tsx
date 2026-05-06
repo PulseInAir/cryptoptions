@@ -50,7 +50,7 @@ export default function PaperTrading() {
   }, 0);
 
   return (
-    <PageShell title="Paper Trading" subtitle={`Virtual portfolio · Welcome ${user.name}`}>
+    <PageShell title="Paper Trading" subtitle={`Virtual portfolio · Welcome ${user.email?.split('@')[0] ?? 'trader'}`}>
       <div className="grid md:grid-cols-3 gap-4 mb-6">
         <StatCard label="Cash" value={`₹${cash.toLocaleString(undefined, { maximumFractionDigits: 0 })}`} icon={Wallet} />
         <StatCard label="Open Positions" value={positions.length.toString()} icon={TrendingUp} />
