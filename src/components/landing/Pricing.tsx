@@ -2,15 +2,48 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { LoginDialog } from "@/components/LoginDialog";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export function Pricing() {
-  const { user, upgrade } = useAuth();
-  const [open, setOpen] = useState(false);
-  const handleUpgrade = () => {
-    if (!user) { setOpen(true); return; }
-    upgrade(); toast.success("Welcome to CryptOptions Pro! (mock upgrade)");
+  const { user, plan, refreshPlan } = useAuth();
+  const nav = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const handleUpgrade = async () => {
+    if (!user) { nav('/auth'); return; }
+    if (plan === 'pro' || plan === 'admin') return;
+    setBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('razorpay-create-order', { body: { plan: 'pro' } });
+      if (error || !data?.order_id) { toast.error(error?.message || 'Could not start checkout'); return; }
+      const rk = data.key_id;
+      // Load Razorpay checkout
+      await new Promise<void>((resolve, reject) => {
+        if ((window as any).Razorpay) return resolve();
+        const s = document.createElement('script');
+        s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        s.onload = () => resolve(); s.onerror = () => reject(new Error('script'));
+        document.body.appendChild(s);
+      });
+      const rzp = new (window as any).Razorpay({
+        key: rk,
+        order_id: data.order_id,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'CryptOptions',
+        description: 'Pro plan — monthly',
+        prefill: { email: user.email },
+        theme: { color: '#6366f1' },
+        handler: async (resp: any) => {
+          const v = await supabase.functions.invoke('razorpay-verify-payment', { body: resp });
+          if (v.error) toast.error('Verification failed'); else { toast.success('Welcome to Pro!'); await refreshPlan(); }
+        },
+        modal: { ondismiss: () => toast.message('Checkout closed') },
+      });
+      rzp.open();
+    } catch (e: any) { toast.error(e?.message || 'Checkout error'); }
+    finally { setBusy(false); }
   };
   const free = ["Basic BTC/ETH option chains", "Live spot prices", "5 paper trades / day", "Basic OI charts", "Community support"];
   const pro = ["Everything in Free", "Unlimited paper trades", "Full strategy builder + Greeks", "OI heatmaps & max-pain", "Whale flow sentiment", "Multi-expiry analytics", "Priority support"];
@@ -21,10 +54,9 @@ export function Pricing() {
         <p className="mt-4 text-muted-foreground text-lg">Start free. Upgrade when you're hooked.</p>
       </div>
       <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        <Plan name="Free" price="₹0" period="forever" features={free} cta="Get Started" onClick={() => !user && setOpen(true)} />
-        <Plan name="Pro" price="₹1,300" period="/month" features={pro} cta={user?.plan === 'pro' ? "You're on Pro" : 'Upgrade to Pro'} highlight onClick={handleUpgrade} disabled={user?.plan === 'pro'} />
+        <Plan name="Free" price="₹0" period="forever" features={free} cta="Get Started" onClick={() => !user && nav('/auth')} />
+        <Plan name="Pro" price="₹699" period="/month" features={pro} cta={plan === 'pro' || plan === 'admin' ? "You're on Pro" : (busy ? 'Loading…' : 'Upgrade to Pro')} highlight onClick={handleUpgrade} disabled={plan === 'pro' || plan === 'admin' || busy} />
       </div>
-      <LoginDialog open={open} onOpenChange={setOpen} />
     </section>
   );
 }

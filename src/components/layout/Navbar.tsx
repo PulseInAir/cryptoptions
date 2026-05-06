@@ -1,10 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, TrendingUp, Menu, X } from "lucide-react";
+import { Moon, Sun, TrendingUp, Menu, X, Shield } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
-import { LoginDialog } from "@/components/LoginDialog";
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
@@ -20,11 +19,10 @@ const links = [
 
 export function Navbar() {
   const { theme, toggle } = useTheme();
-  const { user, logout } = useAuth();
+  const { user, profile, plan, logout } = useAuth();
   const loc = useLocation();
   const nav = useNavigate();
   const [open, setOpen] = useState(false);
-  const [login, setLogin] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 glass">
@@ -53,18 +51,21 @@ export function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="hidden sm:inline-flex">
-                  {user.name} {user.plan === 'pro' && <span className="ml-1 text-xs text-accent">PRO</span>}
+                  {profile?.display_name || user.email?.split('@')[0]}
+                  {plan === 'pro' && <span className="ml-1 text-xs text-accent">PRO</span>}
+                  {plan === 'admin' && <span className="ml-1 text-xs text-primary">ADMIN</span>}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => nav('/positions')}>My Positions</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => nav('/paper-trading')}>Paper Trading</DropdownMenuItem>
+                {plan === 'admin' && <DropdownMenuItem onClick={() => nav('/admin')}><Shield className="h-4 w-4 mr-2" />Admin</DropdownMenuItem>}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow" onClick={() => setLogin(true)}>
+            <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow" onClick={() => nav('/auth')}>
               Login
             </Button>
           )}
@@ -87,7 +88,6 @@ export function Navbar() {
         </div>
       )}
 
-      <LoginDialog open={login} onOpenChange={setLogin} />
     </header>
   );
 }
