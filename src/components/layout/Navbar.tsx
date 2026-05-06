@@ -33,7 +33,7 @@ export function Navbar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-primary shadow-glow">
             <TrendingUp className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold tracking-tight">Crypt<span className="text-gradient">Option</span></span>
+          <span className="text-xl font-bold tracking-tight">Crypt<span className="text-gradient">Options</span></span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1">
