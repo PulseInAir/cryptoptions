@@ -22,8 +22,8 @@ export function Hero() {
               India's largest BTC & ETH options paper-trading platform. Live option chains, strategy builder with Greeks, OI analytics — all in one place. Practice risk-free.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow h-12 px-6" onClick={() => nav(user ? '/paper-trading' : '/auth')}>
-                Start Paper Trading <ArrowRight className="ml-2 h-4 w-4" />
+              <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow h-12 px-6" onClick={() => nav(user ? '/dashboard' : '/auth')}>
+                {user ? 'Go to Dashboard' : 'Start Paper Trading'} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Link to="/option-chain">
                 <Button size="lg" variant="outline" className="h-12 px-6">

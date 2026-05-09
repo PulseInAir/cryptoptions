@@ -57,6 +57,7 @@ export function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => nav('/dashboard')}>Dashboard</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => nav('/positions')}>My Positions</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => nav('/paper-trading')}>Paper Trading</DropdownMenuItem>
                 {plan === 'admin' && <DropdownMenuItem onClick={() => nav('/admin')}><Shield className="h-4 w-4 mr-2" />Admin</DropdownMenuItem>}

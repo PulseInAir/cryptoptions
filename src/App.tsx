@@ -15,6 +15,7 @@ import Positions from "./pages/Positions";
 import PricingPage from "./pages/PricingPage";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import Dashboard from "./pages/Dashboard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
@@ -32,6 +33,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/option-chain" element={<OptionChain />} />
                 <Route path="/strategy-builder" element={<StrategyBuilder />} />
                 <Route path="/paper-trading" element={<ProtectedRoute><PaperTrading /></ProtectedRoute>} />
