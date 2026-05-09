@@ -16,14 +16,14 @@ export function Hero() {
               <Sparkles className="h-3.5 w-3.5" /> Powered by Delta Exchange India
             </div>
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
-              Trade <span className="text-gradient">Crypto Options</span><br />like a Pro.
+              Trade Crypto Options with<br /><span className="text-gradient">Clarity and Control.</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-xl">
               India's largest BTC & ETH options paper-trading platform. Live option chains, strategy builder with Greeks, OI analytics — all in one place. Practice risk-free.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow h-12 px-6" onClick={() => nav(user ? '/paper-trading' : '/auth')}>
-                Start Paper Trading <ArrowRight className="ml-2 h-4 w-4" />
+              <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow h-12 px-6" onClick={() => nav(user ? '/dashboard' : '/auth')}>
+                {user ? 'Go to Dashboard' : 'Start Paper Trading'} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Link to="/option-chain">
                 <Button size="lg" variant="outline" className="h-12 px-6">

@@ -20,7 +20,7 @@ export default function Auth() {
   const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => { if (user) nav('/'); }, [user, nav]);
+  useEffect(() => { if (user) nav('/dashboard'); }, [user, nav]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true);
@@ -30,10 +30,10 @@ export default function Auth() {
       if (mode === 'signup') {
         const nv = nameSchema.safeParse(name); if (!nv.success) { toast.error("Enter your name"); return; }
         const { error } = await signUpEmail(ev.data, pv.data, nv.data);
-        if (error) toast.error(error); else { toast.success("Account created!"); nav('/'); }
+        if (error) toast.error(error); else { toast.success("Account created!"); nav('/dashboard'); }
       } else {
         const { error } = await signInEmail(ev.data, pv.data);
-        if (error) toast.error(error); else nav('/');
+        if (error) toast.error(error); else nav('/dashboard');
       }
     } finally { setBusy(false); }
   };
