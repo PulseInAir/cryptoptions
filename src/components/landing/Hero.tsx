@@ -16,7 +16,7 @@ export function Hero() {
               <Sparkles className="h-3.5 w-3.5" /> Powered by Delta Exchange India
             </div>
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
-              Trade <span className="text-gradient">Crypto Options</span><br />like a Pro.
+              Trade Crypto Options with<br /><span className="text-gradient">Clarity and Control.</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-xl">
               India's largest BTC & ETH options paper-trading platform. Live option chains, strategy builder with Greeks, OI analytics — all in one place. Practice risk-free.
