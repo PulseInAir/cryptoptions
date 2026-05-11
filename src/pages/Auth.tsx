@@ -16,7 +16,11 @@ const nameSchema = z.string().trim().min(1).max(80);
 export default function Auth() {
   const { user, signInEmail, signUpEmail, signInGoogle } = useAuth();
   const nav = useNavigate();
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [searchParams] = useSearchParams();
+  const [mode, setMode] = useState<'login' | 'signup'>(() => {
+    const tab = searchParams.get('tab');
+    return tab === 'signup' ? 'signup' : 'login';
+  });
   const [email, setEmail] = useState(""); const [password, setPassword] = useState(""); const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
