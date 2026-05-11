@@ -1,66 +1,65 @@
-
 ## Goal
-Match the Sensibull-style look & feel from A1 (landing) and A2 (post-login dashboard) inside CryptOptions, adapted for BTC/ETH crypto options.
+Replace the current `/dashboard` page with a closer 1:1 replica of Sensibull's `/home` layout, adapted to CryptOptions (BTC/ETH, Delta Exchange India). No backend changes.
 
-## Scope
+## Layout (top → bottom)
 
-### 1. Landing page redesign (image A1)
-Rework `src/pages/Index.tsx` and supporting components into these sections, in order:
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ Welcome to CRYPTOPTIONS                  [Connect broker ▸] │
+│ India's first crypto option trading terminal                 │
+└─────────────────────────────────────────────────────────────┘
 
-1. **Hero** — "Trade Crypto Options with Clarity and Control" headline, subhead, CTA button, and a dark glass mock of an option chain + payoff chart on the right.
-2. **Trust strip** — "50K+ traders", "SEBI*-style transparency", "4.8★" mini-stats row (adapted: "Powered by Delta Exchange India").
-3. **Integrations row** — "Integrated with Delta Exchange India" (single broker, since that's the only data source).
-4. **Testimonial quote** — single large pull quote with avatar.
-5. **Build Strategies without Spreadsheets** — left copy + right payoff/Greeks mock (reuse strategy builder visuals).
-6. **Analyse & Manage your Trades** — left copy + right positions table mock.
-7. **Rehearse Before You Risk** — paper-trading pitch + screenshot mock.
-8. **Track live market data & clarify trends** — OI heatmap mock on left, copy on right.
-9. **Pioneers of transparency in Indian F&O** (adapted to "crypto F&O") — bullet list + dashboard mock.
-10. **Conquer your Mind** — mindful-trading callout card with two prompt chips.
-11. **Access Anywhere** — phone mockup + QR placeholder.
-12. **Testimonials grid** — 3–4 user reviews with stars.
-13. **In the Spotlight** — press/logo strip (placeholder logos).
-14. **Pricing CTA** — existing Pricing block, rebranded to "Join 2 Million+ traders" style banner.
-15. **Footer** — keep existing.
+┌──────── Primary actions card (white/elevated, 3×2 grid) ────┐
+│ [icon] Easiest way to    [icon] Get ready-made   [icon] ... │
+│        trade options            strategies                  │
+│        copy                     copy                        │
+│        [Easy options]           [Strategy wizard]   [...]   │
+│ ─────────────────────────────────────────────────────────── │
+│ [icon] Practice Trade    [icon] BTC/ETH Heatmap  [icon] #Ve │
+│        / Drafts                  copy                       │
+│        [Practice Trade]          [Heatmap]          [Share] │
+└─────────────────────────────────────────────────────────────┘
 
-All sections use existing semantic tokens (`bg-card`, `text-gradient`, `bg-gradient-primary`, `glass`, `shadow-card`). No raw colors.
+┌──────── Advanced tools (single elevated card) ──────────────┐
+│ Tools to guess the direction                                │
+│  ┌─ thumbnail ─┐ Option chain      ┌─ thumb ─┐ OI analysis  │
+│  ┌─ thumb ─┐ Multi-strike OI       ┌─ thumb ─┐ Whale Flow   │
+│  ┌─ thumb ─┐ Multi Straddle Charts ┌─ thumb ─┐ Live Options │
+│  ┌─ thumb ─┐ Crypto data                                    │
+│                                                             │
+│ Find great trades                                           │
+│  ┌─ thumb ─┐ Screener              ┌─ thumb ─┐ Tech signals │
+│                                                             │
+│ Others                                                      │
+│  ┌─ thumb ─┐ IV chart              ┌─ thumb ─┐ Events cal.  │
+└─────────────────────────────────────────────────────────────┘
+```
 
-### 2. Post-login Dashboard (image A2)
-- New route `/dashboard` (component `src/pages/Dashboard.tsx`).
-- After login, redirect from `/auth` to `/dashboard` (and update Hero CTA to go to `/dashboard` when logged in).
-- Layout:
-  - Welcome header: "Welcome {display_name}," + small "X people sharing live positions right now" line.
-  - **Top trader carousel row** — 4 placeholder cards with avatar, handle, P&L number, % change.
-  - **Primary action grid** (2 rows × 3 cols on desktop):
-    - Easiest way to trade options → Easy options (links `/strategy-builder`)
-    - Get ready-made strategies → Strategy wizard
-    - Create your own strategies → Strategy builder
-    - Practice Trade / Draft Portfolios → `/paper-trading`
-    - BTC/ETH Heatmap → `/oi-analysis`
-    - #VerifiedByCryptOptions → share P&L (placeholder)
-  - Right-side promo card "Introducing Mindful Trading".
-  - **Advanced tools section** with sub-headers:
-    - *Tools to guess the direction*: Option Chain, Open Interest Analysis (2 large cards with mock visuals).
-    - *Multi-strike OI*, *Whale Flow data* (2 cards).
-    - *Multi Straddle-Strangle Charts*, *Live Options Charts* (2 cards).
-    - *Crypto data* (1 card).
-  - **Find great trades**: Screener, Technical signals (2 cards).
-  - **Others**: IV chart, Events calendar (2 cards).
-- Each card is a `Link` to the closest existing route (Option Chain, OI Analysis, Strategy Builder, Paper Trading) or `#` placeholder if no route.
-- Cards use `bg-card border border-border rounded-xl p-5 hover:border-primary/40` with a small SVG/emoji thumbnail on top and title + description below.
+## Key differences from current Dashboard
+- Drop the "live traders carousel" and the gradient "Mindful Trading" side promo — Sensibull's home doesn't have them. Keeps the page focused like the source.
+- Wrap the 6 primary actions in **one** elevated card with internal dividers (Sensibull style), not separate cards in a side-by-side grid with a promo.
+- Wrap **Advanced tools / Find great trades / Others** in **one** elevated card with section sub-headings (matches Sensibull).
+- Each advanced-tool item becomes a horizontal row: small thumbnail (mock SVG) on the left, title + description on the right — same pattern as Sensibull's screenshot mockups.
+- Header reads "Welcome to CRYPTOPTIONS / India's first crypto option trading terminal" with a top-right "Connect broker" button (links to Delta Exchange settings placeholder, currently `/pricing` or `#`).
+- Light, neutral background (`bg-muted/30`) with `bg-card` elevated panels — matches Sensibull's flat clean look while still respecting our dark/light theme tokens.
 
-### 3. Routing & redirect
-- Add `/dashboard` route in `src/App.tsx` wrapped in `ProtectedRoute`.
-- In `Auth.tsx`, after successful login/signup redirect to `/dashboard`.
-- In `Navbar`, add "Dashboard" link visible only when `user` is set (replaces or precedes existing links on the user dropdown).
-
-### 4. Out of scope
-- No backend changes, no new tables, no edge function changes.
-- No Razorpay or auth logic changes.
-- No real "live positions" data — placeholder numbers only.
+## Adaptations (crypto-specific labels)
+- "NIFTY Heatmap" → **BTC/ETH Heatmap**
+- "FII DII data" → **Whale Flow data** (on-chain large-wallet flow)
+- "Stock data" → **Crypto data**
+- "#VerifiedBySensibull" → **#VerifiedByCryptOptions**
+- Routes map to existing pages: `/strategy-builder`, `/paper-trading`, `/oi-analysis`, `/option-chain`, `/positions`. Items without a matching page link to `#` for now.
 
 ## Technical notes
-- All new components in `src/components/landing/` (one file per major section) and `src/components/dashboard/` for the dashboard cards.
-- Reuse `MiniPayoff`-style inline SVGs for mock charts; no new image assets required.
-- Keep page under 200 lines per file; split sections aggressively.
-- Use `framer-motion` only if already installed; otherwise CSS transitions.
+- Rewrite `src/pages/Dashboard.tsx` only. Reuse `Navbar`, `Footer`.
+- New small file `src/components/dashboard/ToolThumb.tsx` — renders a 64×64 inline SVG mock per tool (option chain table, OI bars, heatmap squares, line chart, etc.) so we don't need image assets.
+- Two presentational sub-components inside `Dashboard.tsx`:
+  - `<PrimaryTile icon title desc cta to />`
+  - `<ToolRow thumb title desc to />`
+- All styling via existing semantic tokens (`bg-card`, `border-border`, `text-muted-foreground`, `bg-gradient-primary`, `shadow-card`). No raw colors.
+- Fully responsive: 1 col (mobile) → 2 col (md) → 3 col (lg) for primary tiles; 1 → 2 col for advanced tool rows.
+
+## Out of scope
+- No backend, schema, auth, or routing changes (route `/dashboard` already exists and is protected).
+- No new dependencies.
+- No landing page changes.
