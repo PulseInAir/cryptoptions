@@ -66,9 +66,14 @@ export function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow" onClick={() => nav('/auth')}>
-              Login
-            </Button>
+            <>
+              <Button size="sm" variant="outline" className="hidden sm:inline-flex" onClick={() => nav('/auth')}>
+                Login
+              </Button>
+              <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-glow" onClick={() => nav('/auth?tab=signup')}>
+                Get Started
+              </Button>
+            </>
           )}
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(!open)}>
             {open ? <X /> : <Menu />}
