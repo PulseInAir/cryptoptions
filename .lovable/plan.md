@@ -1,65 +1,31 @@
-## Goal
-Replace the current `/dashboard` page with a closer 1:1 replica of Sensibull's `/home` layout, adapted to CryptOptions (BTC/ETH, Delta Exchange India). No backend changes.
+## Problem
 
-## Layout (top → bottom)
+After Google login, the user is redirected to the landing page (`/`) instead of the dashboard.
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│ Welcome to CRYPTOPTIONS                  [Connect broker ▸] │
-│ India's first crypto option trading terminal                 │
-└─────────────────────────────────────────────────────────────┘
+**Root cause:** in `src/contexts/AuthContext.tsx`, `signInGoogle` sets `redirect_uri: ${window.location.origin}/`. Google OAuth returns the user to `/` (landing), not `/dashboard`. The `useEffect` in `Auth.tsx` that pushes to `/dashboard` never runs because the user never lands back on `/auth`.
 
-┌──────── Primary actions card (white/elevated, 3×2 grid) ────┐
-│ [icon] Easiest way to    [icon] Get ready-made   [icon] ... │
-│        trade options            strategies                  │
-│        copy                     copy                        │
-│        [Easy options]           [Strategy wizard]   [...]   │
-│ ─────────────────────────────────────────────────────────── │
-│ [icon] Practice Trade    [icon] BTC/ETH Heatmap  [icon] #Ve │
-│        / Drafts                  copy                       │
-│        [Practice Trade]          [Heatmap]          [Share] │
-└─────────────────────────────────────────────────────────────┘
+The same issue exists in `signUpEmail` (`emailRedirectTo: ${window.location.origin}/`) for email-confirmation flows.
 
-┌──────── Advanced tools (single elevated card) ──────────────┐
-│ Tools to guess the direction                                │
-│  ┌─ thumbnail ─┐ Option chain      ┌─ thumb ─┐ OI analysis  │
-│  ┌─ thumb ─┐ Multi-strike OI       ┌─ thumb ─┐ Whale Flow   │
-│  ┌─ thumb ─┐ Multi Straddle Charts ┌─ thumb ─┐ Live Options │
-│  ┌─ thumb ─┐ Crypto data                                    │
-│                                                             │
-│ Find great trades                                           │
-│  ┌─ thumb ─┐ Screener              ┌─ thumb ─┐ Tech signals │
-│                                                             │
-│ Others                                                      │
-│  ┌─ thumb ─┐ IV chart              ┌─ thumb ─┐ Events cal.  │
-└─────────────────────────────────────────────────────────────┘
-```
+## Fix
 
-## Key differences from current Dashboard
-- Drop the "live traders carousel" and the gradient "Mindful Trading" side promo — Sensibull's home doesn't have them. Keeps the page focused like the source.
-- Wrap the 6 primary actions in **one** elevated card with internal dividers (Sensibull style), not separate cards in a side-by-side grid with a promo.
-- Wrap **Advanced tools / Find great trades / Others** in **one** elevated card with section sub-headings (matches Sensibull).
-- Each advanced-tool item becomes a horizontal row: small thumbnail (mock SVG) on the left, title + description on the right — same pattern as Sensibull's screenshot mockups.
-- Header reads "Welcome to CRYPTOPTIONS / India's first crypto option trading terminal" with a top-right "Connect broker" button (links to Delta Exchange settings placeholder, currently `/pricing` or `#`).
-- Light, neutral background (`bg-muted/30`) with `bg-card` elevated panels — matches Sensibull's flat clean look while still respecting our dark/light theme tokens.
+1. **`src/contexts/AuthContext.tsx`**
+   - `signInGoogle`: change `redirect_uri` to `${window.location.origin}/dashboard`.
+   - `signUpEmail`: change `emailRedirectTo` to `${window.location.origin}/dashboard`.
 
-## Adaptations (crypto-specific labels)
-- "NIFTY Heatmap" → **BTC/ETH Heatmap**
-- "FII DII data" → **Whale Flow data** (on-chain large-wallet flow)
-- "Stock data" → **Crypto data**
-- "#VerifiedBySensibull" → **#VerifiedByCryptOptions**
-- Routes map to existing pages: `/strategy-builder`, `/paper-trading`, `/oi-analysis`, `/option-chain`, `/positions`. Items without a matching page link to `#` for now.
+2. **`src/pages/Index.tsx` (landing)** — defensive guard so a logged-in user who somehow lands on `/` is forwarded to `/dashboard`:
+   - Read `useAuth()`; if `user && !loading`, `navigate('/dashboard', { replace: true })` from a `useEffect`.
+   - This also makes the Navbar's logo click behave naturally for logged-out users (lands on marketing) while logged-in users always end up in the app.
 
-## Technical notes
-- Rewrite `src/pages/Dashboard.tsx` only. Reuse `Navbar`, `Footer`.
-- New small file `src/components/dashboard/ToolThumb.tsx` — renders a 64×64 inline SVG mock per tool (option chain table, OI bars, heatmap squares, line chart, etc.) so we don't need image assets.
-- Two presentational sub-components inside `Dashboard.tsx`:
-  - `<PrimaryTile icon title desc cta to />`
-  - `<ToolRow thumb title desc to />`
-- All styling via existing semantic tokens (`bg-card`, `border-border`, `text-muted-foreground`, `bg-gradient-primary`, `shadow-card`). No raw colors.
-- Fully responsive: 1 col (mobile) → 2 col (md) → 3 col (lg) for primary tiles; 1 → 2 col for advanced tool rows.
+3. **`src/pages/Auth.tsx`** — already redirects to `/dashboard` when `user` becomes truthy; no change needed beyond confirming behavior after fix #1.
 
 ## Out of scope
-- No backend, schema, auth, or routing changes (route `/dashboard` already exists and is protected).
-- No new dependencies.
-- No landing page changes.
+
+- No changes to dashboard content, auth UI, or backend/RLS.
+- No new routes.
+
+## Verification
+
+- Email login → lands on `/dashboard`.
+- Google login → returns to `/dashboard` directly.
+- Logged-in user visiting `/` → auto-redirects to `/dashboard`.
+- Logged-out user visiting `/` → sees landing page as today.
