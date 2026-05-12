@@ -47,12 +47,17 @@ export default function Dashboard() {
     <div className="min-h-screen flex flex-col bg-muted/30">
       <Navbar />
       <main className="flex-1 container max-w-6xl py-8 lg:py-10 space-y-6">
-        <header>
-          <h1 className="text-2xl lg:text-3xl font-bold">
-            Welcome to <span className="text-gradient">CRYPTOPTIONS</span>
-            {name && <span className="text-muted-foreground font-normal text-xl lg:text-2xl">, {name}</span>}
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">India's first crypto option trading terminal</p>
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold">
+              Welcome to <span className="text-gradient">CRYPTOPTIONS</span>
+              {name && <span className="text-muted-foreground font-normal text-xl lg:text-2xl">, {name}</span>}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">India's first crypto option trading terminal</p>
+          </div>
+          <Button asChild className="bg-gradient-primary hover:opacity-90 shadow-glow">
+            <Link to="/pricing">Connect with broker</Link>
+          </Button>
         </header>
 
         <section className="rounded-2xl border border-border bg-card shadow-card p-4 sm:p-6">
