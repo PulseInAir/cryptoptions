@@ -55,9 +55,6 @@ export default function Dashboard() {
             </h1>
             <p className="text-sm text-muted-foreground mt-1">India's first crypto option trading terminal</p>
           </div>
-          <Button asChild className="bg-gradient-primary hover:opacity-90 shadow-glow">
-            <Link to="/pricing">Connect with broker</Link>
-          </Button>
         </header>
 
         <section className="rounded-2xl border border-border bg-card shadow-card p-4 sm:p-6">
