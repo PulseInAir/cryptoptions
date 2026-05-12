@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/landing/Hero";
@@ -15,7 +18,13 @@ import { MindfulCard } from "@/components/landing/MindfulCard";
 import { AccessAnywhere } from "@/components/landing/AccessAnywhere";
 import { PressStrip } from "@/components/landing/PressStrip";
 
-const Index = () => (
+const Index = () => {
+  const { user, loading } = useAuth();
+  const nav = useNavigate();
+  useEffect(() => {
+    if (!loading && user) nav('/dashboard', { replace: true });
+  }, [user, loading, nav]);
+  return (
   <div className="min-h-screen flex flex-col">
     <Navbar />
     <main className="flex-1">
@@ -71,6 +80,7 @@ const Index = () => (
     </main>
     <Footer />
   </div>
-);
+  );
+};
 
 export default Index;
