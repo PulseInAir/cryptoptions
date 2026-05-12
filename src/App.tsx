@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PaperProvider } from "@/contexts/PaperContext";
-import Index from "./pages/Index";
 import OptionChain from "./pages/OptionChain";
 import StrategyBuilder from "./pages/StrategyBuilder";
 import PaperTrading from "./pages/PaperTrading";
@@ -17,9 +16,18 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import Dashboard from "./pages/Dashboard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { Loader2 } from "lucide-react";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+function RootRedirect() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin" /></div>;
+  return <Navigate to={user ? "/dashboard" : "/auth"} replace />;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -31,7 +39,7 @@ const App = () => (
             <Sonner />
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={<RootRedirect />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/option-chain" element={<OptionChain />} />
