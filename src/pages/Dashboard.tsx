@@ -50,7 +50,7 @@ export default function Dashboard() {
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-3xl font-bold">
-              Welcome to <span className="text-gradient">CRYPTOPTIONS</span>
+              Welcome to <span className="text-gradient">CryptOptions</span>
               {name && <span className="text-muted-foreground font-normal text-xl lg:text-2xl">, {name}</span>}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">India's first crypto option trading terminal</p>
